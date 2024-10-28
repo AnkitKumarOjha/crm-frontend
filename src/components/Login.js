@@ -27,16 +27,16 @@ export default function Login() {
   const authenticateUser = async () => {
     try {
       const data = await loginUser(loginState["email"], loginState["password"]);
+      localStorage.setItem("email",loginState["email"]);
+      
+      login(data.roles, data.token);
+      const role = data.roles; 
 
-      login(data.role, data.token);
-      const roles = data.roles; 
-
-      if (roles.includes("ROLE_ADMIN")) {
+      if (role.includes("ROLE_ADMIN")) {
 
         window.location.href = "/admin";
-        console.log("Inside admin !");
 
-      } else if (roles.includes("ROLE_SALES_REP")) {
+      } else if (role.includes("ROLE_SALES_REP")) {
 
         window.location.href = "/sales";
 

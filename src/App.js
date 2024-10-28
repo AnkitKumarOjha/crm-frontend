@@ -1,24 +1,39 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/Login";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import SalesDashboard from "./pages/sales/SalesDashboard";
-import { AuthProvider } from "./context/AuthContext";
+import AuthContext from "./context/AuthContext";
+import DefaultLayout from "./layout/DefaultLayout";
+import AdminProfile from "./pages/admin/AdminProfile";
+import SalesProfile from "./pages/sales/SalesProfile";
+import { useContext } from "react";
+import SalesProfileA from "./pages/admin/SalesProfileA";
+import Customer from "./pages/customer/Customer";
+import CreateUser from "./pages/admin/CreateUser";
 
 function App() {
+  const { role } = useContext(AuthContext);
   return (
-    <div className="min-h-full h-screen flex  justify-center py-12 px-4">
-      <div className="max-w-md w-full mt-40 ">
-        <AuthProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/sales" element={<SalesDashboard />} />
-            </Routes>
-          </BrowserRouter>
-        </AuthProvider>
-      </div>
-    </div>
+    <>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+      </Routes>
+      <DefaultLayout>
+        <Routes>
+
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/sales" element={<SalesDashboard />} />
+
+          <Route path="/profile" element={role==="ROLE_ADMIN"?<AdminProfile/>:<SalesProfile />} />
+
+          <Route path="/sales-reps/:id" element={<SalesProfileA/>} />
+          <Route path="/customers/:customerid" element={<Customer/>} />
+          <Route path="/create-user" element={<CreateUser/>} />
+
+
+        </Routes>
+      </DefaultLayout>
+      </>
   );
 }
 
