@@ -1,25 +1,35 @@
-import React, { createContext, roleeducer, useReducer } from 'react';
+import React, { createContext, useReducer } from "react";
 
 const AuthContext = createContext();
 
 const initialState = {
-  isAuthenticated: false,
-  role: null,
-  token: null
+  isAuthenticated: !!localStorage.getItem('token'),
+  role: localStorage.getItem('role') || null,
+  token: localStorage.getItem('token') || null,
 };
+
+
 
 const authReducer = (state, action) => {
   switch (action.type) {
-    case 'LOGIN':
-      localStorage.setItem('token', action.payload.token);
+    case "LOGIN":
+      if (action.payload.token) {
+        localStorage.setItem("token", action.payload.token);
+        localStorage.setItem("role", action.payload.role);
+        console.log("Token saved:", action.payload.token);
+      } else {
+        console.error("No token provided!");
+      }
+      console.log("Before setting to context role is : " + action.payload.role); 
       return {
         ...state,
-        isAuthenticated: true,
+        isAuthenticated: !!action.payload.token,
         role: action.payload.role,
         token: action.payload.token,
       };
-    case 'LOGOUT':
-      localStorage.removeItem('token');
+
+    case "LOGOUT":
+      localStorage.removeItem("token");
       return {
         ...state,
         isAuthenticated: false,
@@ -35,11 +45,12 @@ export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   const login = (role, token) => {
-    dispatch({ type: 'LOGIN', payload: { role, token } });
+    console.log("Login function called with role:", role, "and token:", token);
+    dispatch({ type: "LOGIN", payload: { role, token } });
   };
 
   const logout = () => {
-    dispatch({ type: 'LOGOUT' });
+    dispatch({ type: "LOGOUT" });
   };
 
   return (
