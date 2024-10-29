@@ -27,7 +27,7 @@ const EditUser = () => {
 
   const [userForm, setUserForm] = useState({
     name: '',
-    email: 'salesRepDetails.email',
+    email: '',
     password: '',
     role: '', // Assuming a single role
   });
