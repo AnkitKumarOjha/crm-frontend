@@ -6,6 +6,15 @@ import UserOne from '../../images/user/user-01.png';
 const DropdownUser = ({ userName = "Thomas Anree", userRole = "Admin" }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  const handleLogout = () => {
+    localStorage.removeItem("role")
+    localStorage.removeItem("token")
+    localStorage.removeItem("email")
+    localStorage.removeItem("color-theme")
+    localStorage.removeItem("sidebar-expanded")
+
+  }
+
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
       <button
@@ -14,13 +23,7 @@ const DropdownUser = ({ userName = "Thomas Anree", userRole = "Admin" }) => {
         aria-expanded={dropdownOpen}
         aria-haspopup="true"
       >
-        <span className="hidden text-right lg:block">
-          <span className="block text-sm font-medium text-black dark:text-white">
-            {userName}
-          </span>
-          <span className="block text-xs">{userRole}</span>
-        </span>
-
+        
         <span className="h-12 w-12 rounded-full">
           <img 
             src={UserOne} 
@@ -72,6 +75,7 @@ const DropdownUser = ({ userName = "Thomas Anree", userRole = "Admin" }) => {
               <Link
                 to="/login"
                 className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+                onClick={handleLogout}
               >
                 {/* SVG for Settings */}
                 Logout
