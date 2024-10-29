@@ -10,9 +10,27 @@ import { useContext } from "react";
 import SalesProfileA from "./pages/admin/SalesProfileA";
 import Customer from "./pages/customer/Customer";
 import CreateUser from "./pages/admin/CreateUser";
+import EditUser from "./pages/admin/EditUser"; // import Unauthorized component
+import Unauthorized from "./components/Unauthorized";
+import CreateCustomer from "./pages/sales/CreateCustomer";
+import CustomerForSales from "./pages/customer/CustomerForSales";
+import EditProfile from "./pages/EditProfile";
+import EditCustomer from "./pages/customer/EditCustomer";
+import CreateContact from "./pages/sales/CreateContact";
 
 function App() {
   const { role } = useContext(AuthContext);
+
+  // Admin Route Wrapper
+  const AdminRoute = ({ element }) => {
+    return role === "ROLE_ADMIN" ? element : <Unauthorized />;
+  };
+
+  // Sales Route Wrapper
+  const SalesRoute = ({ element }) => {
+    return role === "ROLE_SALES_REP" ? element : <Unauthorized />;
+  };
+
   return (
     <>
       <Routes>
@@ -20,20 +38,31 @@ function App() {
       </Routes>
       <DefaultLayout>
         <Routes>
+          {/* Shared Profile Route */}
+          <Route
+            path="/profile"
+            element={role === "ROLE_ADMIN" ? <AdminProfile /> : <SalesProfile />}
+          />
+          <Route path="/edit-profile" element={<EditProfile/>}/>
 
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/sales" element={<SalesDashboard />} />
+          {/* Admin routes */}
+          <Route path="/sales-reps/:id" element={<AdminRoute element={<SalesProfileA />} />} />
+          <Route path="/admin" element={<AdminRoute element={<AdminDashboard />} />} />
+          <Route path="/customers/:customerid" element={<AdminRoute element={<Customer />} />} />
+          <Route path="/create-user" element={<AdminRoute element={<CreateUser />} />} />
+          <Route path="/edit-user/:id" element={<AdminRoute element={<EditUser />} />} />
 
-          <Route path="/profile" element={role==="ROLE_ADMIN"?<AdminProfile/>:<SalesProfile />} />
-
-          <Route path="/sales-reps/:id" element={<SalesProfileA/>} />
-          <Route path="/customers/:customerid" element={<Customer/>} />
-          <Route path="/create-user" element={<CreateUser/>} />
-
-
+          {/* Sales routes */}
+          <Route path="/sales" element={<SalesRoute element={<SalesDashboard />} />} />
+          <Route path="/create-customer" element={<SalesRoute element={<CreateCustomer />} />} />
+          <Route path="/customer/:customerid" element={<SalesRoute element={<CustomerForSales />} />} />
+          <Route path="/edit-customer/:id" element={<SalesRoute element={<EditCustomer />} />} />
+          <Route path="/create-contact/:customerid" element={<SalesRoute element={<CreateContact />} />} />
+          {/* Catch-all for unauthorized access */}
+          <Route path="*" element={<Unauthorized />} />
         </Routes>
       </DefaultLayout>
-      </>
+    </>
   );
 }
 

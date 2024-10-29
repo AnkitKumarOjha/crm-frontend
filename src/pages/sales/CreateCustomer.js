@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import MultiSelect from '../../components/MultiSelect'; 
-import { createUserRequest } from '../../api/authApi'; // Adjust the import path accordingly
 import Success from '../../components/Alert/Success';
 import Failed from '../../components/Alert/Failed';
+import { createCustomerRequest } from '../../api/authApi';
 
-const CreateUser = () => {
-  const [userForm, setUserForm] = useState({
+const CreateCustomer = () => {
+  const [customerForm, setCustomerForm] = useState({
     name: '',
     email: '',
-    password: '',
-    role: '', // Assuming a single role
+    phoneNumber: '',
+    createdBy: localStorage.getItem("email") // Assuming this will be the logged-in user's email
   });
 
   const [notification, setNotification] = useState({ message: '', type: '' });
@@ -18,13 +17,18 @@ const CreateUser = () => {
     e.preventDefault();
 
     try {
-      const data = await createUserRequest(userForm);
-      setNotification({ message: 'User created successfully!', type: 'success' });
-      console.log('User created successfully', data);
+      const data = await createCustomerRequest(customerForm);
+      setNotification({ message: 'Customer created successfully!', type: 'success' });
+      console.log('Customer created successfully', data);
     } catch (error) {
-      setNotification({ message:  'Error creating user', type: 'error' });
-      console.error('Error creating user', error);
+      setNotification({ message: 'Error creating customer', type: 'error' });
+      console.error('Error creating customer', error);
     }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCustomerForm({ ...customerForm, [name]: value });
   };
 
   // Clear notification after 3 seconds
@@ -37,11 +41,6 @@ const CreateUser = () => {
     }
   }, [notification]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUserForm({ ...userForm, [name]: value });
-  };
-
   return (
     <>
       {/* Notification Display */}
@@ -52,9 +51,8 @@ const CreateUser = () => {
         <div className="flex flex-wrap items-center justify-center">
           <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
-              <span className="mb-1.5 block font-medium">Expansion is true success</span>
               <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-                Create New User
+                Create New Customer
               </h2>
 
               <form onSubmit={handleSubmit}>
@@ -62,12 +60,12 @@ const CreateUser = () => {
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">Name</label>
                   <input
-                  required={true}
+                    required={true}
                     type="text"
                     name="name"
-                    value={userForm.name}
+                    value={customerForm.name}
                     onChange={handleChange}
-                    placeholder="Enter your full name"
+                    placeholder="Enter customer's full name"
                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   />
                 </div>
@@ -76,41 +74,27 @@ const CreateUser = () => {
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">Email</label>
                   <input
-                  required={true}
+                    required={true}
                     type="email"
                     name="email"
-                    value={userForm.email}
+                    value={customerForm.email}
                     onChange={handleChange}
-                    placeholder="Enter your email"
+                    placeholder="Enter customer's email"
                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary dark:border-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   />
                 </div>
 
-                {/* Password Input */}
+                {/* Phone Number Input */}
                 <div className="mb-4">
-                  <label className="mb-2.5 block font-medium text-black dark:text-white">Password</label>
+                  <label className="mb-2.5 block font-medium text-black dark:text-white">Phone Number</label>
                   <input
-                  required={true}
-                    type="password"
-                    name="password"
-                    value={userForm.password}
+                    required={true}
+                    type="text"
+                    name="phoneNumber"
+                    value={customerForm.phoneNumber}
                     onChange={handleChange}
-                    placeholder="Enter your password"
-                    className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary dark:border-strokedark dark:bg-form-input dark:focus:border-primary"
-                  />
-                </div>
-
-                {/* Role Selection */}
-                <div className="mb-4">
-                  <label className="mb-2.5 block font-medium text-black dark:text-white">Role</label>
-                  <input
-                  required={true}
-                    type="role"
-                    name="role"
-                    value={userForm.role}
-                    onChange={handleChange}
-                    placeholder="enter role"
-                    className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary dark:border-strokedark dark:bg-form-input dark:focus:border-primary"
+                    placeholder="Enter customer's phone number"
+                    className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary dark:border-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   />
                 </div>
 
@@ -118,7 +102,7 @@ const CreateUser = () => {
                 <div className="mb-5">
                   <input
                     type="submit"
-                    value="Create User"
+                    value="Create Customer"
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
                   />
                 </div>
@@ -131,4 +115,4 @@ const CreateUser = () => {
   );
 };
 
-export default CreateUser;
+export default CreateCustomer;

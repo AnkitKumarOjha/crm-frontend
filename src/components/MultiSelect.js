@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 const MultiSelect = ({ id }) => {
   const [options, setOptions] = useState([]);
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState(null); // Now stores a single value
   const [show, setShow] = useState(false);
   const dropdownRef = useRef(null);
   const trigger = useRef(null);
@@ -34,33 +34,21 @@ const MultiSelect = ({ id }) => {
     return show === true;
   };
 
-  const select = (index, event) => {
+  const selectOption = (index) => {
     const newOptions = [...options];
-    if (!newOptions[index].selected) {
-      newOptions[index].selected = true;
-      setSelected([...selected, index]);
-    } else {
-      const selectedIndex = selected.indexOf(index);
-      if (selectedIndex !== -1) {
-        newOptions[index].selected = false;
-        setSelected(selected.filter((i) => i !== index));
-      }
+    // Deselect previous option if there was one
+    if (selected !== null) {
+      newOptions[selected].selected = false;
     }
+    // Select the new option
+    newOptions[index].selected = true;
+    setSelected(index);
     setOptions(newOptions);
+    setShow(false); // Close dropdown after selecting
   };
 
-  const remove = (index) => {
-    const newOptions = [...options];
-    const selectedIndex = selected.indexOf(index);
-    if (selectedIndex !== -1) {
-      newOptions[index].selected = false;
-      setSelected(selected.filter((i) => i !== index));
-      setOptions(newOptions);
-    }
-  };
-
-  const selectedValues = () => {
-    return selected.map((option) => options[option].value);
+  const selectedValue = () => {
+    return selected !== null ? options[selected].value : '';
   };
 
   useEffect(() => {
@@ -77,30 +65,24 @@ const MultiSelect = ({ id }) => {
     <div className="relative z-50">
       <div>
         <select className="hidden" id={id}>
-          <option value="Admin">Admin</option>
-          <option value="Sales_Rep">Sales Rep</option>
+          <option value="ADMIN">Admin</option>
+          <option value="SALES_REP">Sales Rep</option>
         </select>
 
         <div className="flex flex-col items-center">
-          <input name="roles" type="hidden" value={selectedValues()} />
+          <input name="role" type="hidden" value={selectedValue()} />
           <div className="relative z-20 inline-block w-full">
             <div className="relative flex flex-col items-center">
               <div ref={trigger} onClick={open} className="w-full">
                 <div className="mb-2 flex rounded border border-stroke py-2 pl-3 pr-3 outline-none transition focus:border-primary">
                   <div className="flex flex-auto flex-wrap gap-3">
-                    {selected.map((index) => (
-                      <div key={index} className="my-1.5 flex items-center justify-center rounded border px-2.5 py-1.5">
-                        <div>{options[index].text}</div>
-                        <div className="pl-2" onClick={() => remove(index)}>
-                          <svg width="12" height="12" viewBox="0 0 12 12">
-                            <path d="M9.35 3.35a.5.5 0 0 0-.7 0L6 6l-2.65-2.65a.5.5 0 0 0-.7.7L5.3 6 2.65 8.65a.5.5 0 1 0 .7.7L6 6.7l2.65 2.65a.5.5 0 0 0 .7-.7L6.7 6l2.65-2.65a.5.5 0 0 0 0-.7z"></path>
-                          </svg>
-                        </div>
+                    {selected !== null ? (
+                      <div className="my-1.5 flex items-center justify-center rounded border px-2.5 py-1.5">
+                        <div>{options[selected].text}</div>
                       </div>
-                    ))}
-                    {selected.length === 0 && (
+                    ) : (
                       <div className="flex-1">
-                        <input placeholder="Select a role" className="h-full w-full p-1 px-2 outline-none" />
+                        <input placeholder="Select a role" className="h-full w-full p-1 px-2 outline-none" readOnly />
                       </div>
                     )}
                   </div>
@@ -116,7 +98,7 @@ const MultiSelect = ({ id }) => {
               <div className={`absolute top-full left-0 z-40 w-full bg-white ${isOpen() ? '' : 'hidden'}`} ref={dropdownRef}>
                 <div className="flex flex-col">
                   {options.map((option, index) => (
-                    <div key={index} onClick={(event) => select(index, event)} className="cursor-pointer hover:bg-gray-100">
+                    <div key={index} onClick={() => selectOption(index)} className="cursor-pointer hover:bg-gray-100">
                       <div className={`p-2 ${option.selected ? 'bg-blue-100' : ''}`}>{option.text}</div>
                     </div>
                   ))}
