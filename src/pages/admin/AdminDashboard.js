@@ -1,13 +1,36 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CardDataStats from '../../components/CardDataStats'
 import { getSales,getSalesReps } from '../../api/authApi' 
 import ChartOne from '../../components/Charts/ChartOne';
 import ChartTwo from '../../components/Charts/ChartTwo';
 import TableOne from '../../components/Tables/TableOne';
+import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
   const [sales,setSales]=useState(0);
   const [salesReps,setSalesReps]=useState(0);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    navigate("/login");
+  };
+
+  useEffect(() => {
+    const handleBackButton = () => {
+      handleLogout();
+    };
+
+    // Add popstate event listener
+    window.addEventListener("popstate", handleBackButton);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener("popstate", handleBackButton);
+    };
+  }, []);
+
+  
 
   const getSalesRep = async () => {
     const response = await getSalesReps();

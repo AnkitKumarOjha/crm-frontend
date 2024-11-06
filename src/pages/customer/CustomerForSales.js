@@ -202,7 +202,13 @@ const CustomerForSales = () => {
                     <p className="text-meta-3">{contact.date}</p>
                   </div>
 
-                  <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+                  <div className="hidden items-center gap-2 justify-center p-2.5 sm:flex xl:p-5">
+                  <label
+                      htmlFor="cover"
+                      className="flex items-end cursor-pointer w-20 mt-2 justify-center gap-2 rounded bg-primary py-1 px-2 text-sm font-medium text-white hover:bg-opacity-90 xsm:px-4"
+                    >
+                        <Link to={`/${customerid}/edit-contact/${contact.id}`}> Edit</Link>
+                    </label>
                     <label
                       htmlFor="cover"
                       className="flex items-end cursor-pointer w-20 mt-2 justify-center gap-2 rounded bg-red-500 py-1 px-2 text-sm font-medium text-white hover:bg-opacity-90 xsm:px-4"
