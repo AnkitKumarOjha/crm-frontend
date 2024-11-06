@@ -1,18 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import {  getAllSalesRepList } from '../../api/authApi';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { getAllSalesRepList } from "../../api/authApi";
+import { Link } from "react-router-dom";
 
 const TableOne = () => {
-
-  const [salesRepInfo , setSalesRepInfo] = useState([]);
+  const [salesRepInfo, setSalesRepInfo] = useState([]);
 
   useEffect(() => {
     const getSalesRepList = async () => {
       try {
         const response = await getAllSalesRepList();
-      
+
         setSalesRepInfo(response);
-  
       } catch (error) {
         console.error("Error fetching all sales rep data:", error);
       }
@@ -60,8 +58,8 @@ const TableOne = () => {
           <div
             className={`grid grid-cols-3 sm:grid-cols-5 ${
               key === salesRepInfo.length - 1
-                ? ''
-                : 'border-b border-stroke dark:border-strokedark'
+                ? ""
+                : "border-b border-stroke dark:border-strokedark"
             }`}
             key={key}
           >
@@ -70,22 +68,21 @@ const TableOne = () => {
                 {/* <img src={brand.logo} alt="Brand" /> */}
                 {/* {salesRep.id} */}
               </div>
-              <Link
-                to={`/sales-reps/${salesRep.id}`}
-              >
-              <p className="hidden text-black dark:text-white sm:block">
-                {salesRep.name}
-              </p>
+              <Link to={`/sales-reps/${salesRep.id}`}>
+                <p className=" text-black dark:text-white sm:block">
+                  {salesRep.name}
+                </p>
               </Link>
-              
             </div>
 
             <div className="flex items-center justify-center p-2.5 xl:p-5">
-              <p className="text-black dark:text-white">{salesRep.customersManaged}</p>
+              <p className="text-black dark:text-white">
+                {salesRep.customersManaged}
+              </p>
             </div>
 
             <div className="flex items-center justify-center p-2.5 xl:p-5">
-              <p className="text-meta-3">${salesRep.sales*5550}</p>
+              <p className="text-meta-3">${salesRep.sales * 5550}</p>
             </div>
 
             <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
@@ -93,7 +90,14 @@ const TableOne = () => {
             </div>
 
             <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
-              <p className="text-meta-5">{((salesRep.sales/salesRep.customersManaged)*100).toFixed(2)}%</p>
+              <p className="text-meta-5">
+                {salesRep.sales > 0
+                  ? `${(
+                      (salesRep.sales / salesRep.customersManaged) *
+                      100
+                    ).toFixed(2)}%`
+                  : "0%"}
+              </p>
             </div>
           </div>
         ))}

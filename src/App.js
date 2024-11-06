@@ -17,6 +17,7 @@ import CustomerForSales from "./pages/customer/CustomerForSales";
 import EditProfile from "./pages/EditProfile";
 import EditCustomer from "./pages/customer/EditCustomer";
 import CreateContact from "./pages/sales/CreateContact";
+import EditContact from "./pages/sales/EditContact";
 
 function App() {
   const { role } = useContext(AuthContext);
@@ -33,36 +34,61 @@ function App() {
 
   return (
     <>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-      </Routes>
-      <DefaultLayout>
-        <Routes>
-          {/* Shared Profile Route */}
-          <Route
-            path="/profile"
-            element={role === "ROLE_ADMIN" ? <AdminProfile /> : <SalesProfile />}
-          />
-          <Route path="/edit-profile" element={<EditProfile/>}/>
+    <Routes>
+      <Route path="/" element={<LoginPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route
+        path="/profile"
+        element={role === "ROLE_ADMIN" ?<DefaultLayout> <AdminProfile /> </DefaultLayout>: <DefaultLayout><SalesProfile /></DefaultLayout>}
+      />
+      <Route path="/edit-profile/:id" element={<DefaultLayout><EditProfile /></DefaultLayout>} />
+      <Route
+        path="/sales-reps/:id"
+        element={<AdminRoute element={<DefaultLayout><SalesProfileA /></DefaultLayout>} />}
+      />
+      <Route
+        path="/admin"
+        element={<AdminRoute element={<DefaultLayout><AdminDashboard /></DefaultLayout>} />}
+      />
+      <Route
+        path="/customers/:customerid"
+        element={<AdminRoute element={<DefaultLayout><Customer /></DefaultLayout>} />}
+      />
+      <Route
+        path="/create-user"
+        element={<AdminRoute element={<DefaultLayout><CreateUser /></DefaultLayout>} />}
+      />
+      <Route
+        path="/edit-user/:id"
+        element={<AdminRoute element={<DefaultLayout><EditUser /></DefaultLayout>} />}
+      />
 
-          {/* Admin routes */}
-          <Route path="/sales-reps/:id" element={<AdminRoute element={<SalesProfileA />} />} />
-          <Route path="/admin" element={<AdminRoute element={<AdminDashboard />} />} />
-          <Route path="/customers/:customerid" element={<AdminRoute element={<Customer />} />} />
-          <Route path="/create-user" element={<AdminRoute element={<CreateUser />} />} />
-          <Route path="/edit-user/:id" element={<AdminRoute element={<EditUser />} />} />
-
-          {/* Sales routes */}
-          <Route path="/sales" element={<SalesRoute element={<SalesDashboard />} />} />
-          <Route path="/create-customer" element={<SalesRoute element={<CreateCustomer />} />} />
-          <Route path="/customer/:customerid" element={<SalesRoute element={<CustomerForSales />} />} />
-          <Route path="/edit-customer/:id" element={<SalesRoute element={<EditCustomer />} />} />
-          <Route path="/create-contact/:customerid" element={<SalesRoute element={<CreateContact />} />} />
-          {/* Catch-all for unauthorized access */}
-          <Route path="*" element={<Unauthorized />} />
-        </Routes>
-      </DefaultLayout>
-    </>
+      <Route
+        path="/sales"
+        element={<SalesRoute element={<DefaultLayout><SalesDashboard /></DefaultLayout>} />}
+      />
+      <Route
+        path="/create-customer"
+        element={<SalesRoute element={<DefaultLayout><CreateCustomer /></DefaultLayout>} />}
+      />
+      <Route
+        path="/customer/:customerid"
+        element={<SalesRoute element={<DefaultLayout><CustomerForSales /></DefaultLayout>} />}
+      />
+      <Route
+        path="/edit-customer/:id"
+        element={<SalesRoute element={<DefaultLayout><EditCustomer /></DefaultLayout>} />}
+      />
+      <Route
+        path="/create-contact/:customerid"
+        element={<SalesRoute element={<DefaultLayout><CreateContact /></DefaultLayout>} />}
+      />
+      <Route
+        path="/:customerid/edit-contact/:contactid"
+        element={<SalesRoute element={<DefaultLayout><EditContact /></DefaultLayout>} />}
+      />
+    </Routes>
+    </> 
   );
 }
 

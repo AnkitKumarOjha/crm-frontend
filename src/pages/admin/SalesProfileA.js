@@ -168,7 +168,7 @@ const SalesProfileA = () => {
                     <Link
                       to={`/customers/${customer.id}`}
                     >
-                      <p className="hidden text-black dark:text-white sm:block">
+                      <p className=" text-black dark:text-white sm:block">
                         {customer.name}
                       </p>
                     </Link>

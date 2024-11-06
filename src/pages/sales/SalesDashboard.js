@@ -41,7 +41,7 @@ const SalesDashboard = () => {
                   htmlFor="cover"
                   className="flex items-end cursor-pointer w-20 mt-2 justify-center gap-2 rounded bg-primary py-1 px-2 text-sm font-medium text-white hover:bg-opacity-90 xsm:px-4"
                 >
-                  <Link to={`/edit-profile`}>
+                  <Link to={`/edit-profile/${salesRepDetails.id}`}>
                     Edit
                   </Link>
                 </label>

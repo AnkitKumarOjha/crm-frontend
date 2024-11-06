@@ -19,10 +19,10 @@ const CreateCustomer = () => {
     try {
       const data = await createCustomerRequest(customerForm);
       setNotification({ message: 'Customer created successfully!', type: 'success' });
-      console.log('Customer created successfully', data);
     } catch (error) {
-      setNotification({ message: 'Error creating customer', type: 'error' });
-      console.error('Error creating customer', error);
+      const errorMessage = error.response?.data?.message || 'An unexpected error occurred';
+      setNotification({ message: errorMessage, type: 'error' });
+      console.error('Error creating customer:', error);
     }
   };
 
@@ -60,12 +60,13 @@ const CreateCustomer = () => {
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">Name</label>
                   <input
-                    required={true}
+                    required
                     type="text"
                     name="name"
                     value={customerForm.name}
                     onChange={handleChange}
                     placeholder="Enter customer's full name"
+                    maxLength={50} // Limit name to 50 characters
                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   />
                 </div>
@@ -74,12 +75,15 @@ const CreateCustomer = () => {
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">Email</label>
                   <input
-                    required={true}
+                    required
                     type="email"
                     name="email"
                     value={customerForm.email}
                     onChange={handleChange}
                     placeholder="Enter customer's email"
+                    maxLength={50} // Limit email to 50 characters
+                    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" // Email pattern validation
+                    title="Please enter a valid email address"
                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary dark:border-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   />
                 </div>
@@ -88,12 +92,15 @@ const CreateCustomer = () => {
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">Phone Number</label>
                   <input
-                    required={true}
+                    required
                     type="text"
                     name="phoneNumber"
                     value={customerForm.phoneNumber}
                     onChange={handleChange}
                     placeholder="Enter customer's phone number"
+                    maxLength={10} // Limit phone number to 10 characters
+                    pattern="^\d{10}$" // Pattern for a 10-digit number
+                    title="Please enter a 10-digit phone number"
                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary dark:border-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   />
                 </div>

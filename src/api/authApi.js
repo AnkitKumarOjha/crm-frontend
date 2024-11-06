@@ -89,6 +89,18 @@ export const deleteContact = async (customerid, contactid) => {
     const response = await instance.delete(`${BASE_URL}/${customerid}/delete-contact/${contactid}`);
     return response.data;
 };
+export const editContactRequest = async (customerid,contactid, req) => {
+    const response = await instance.put(`${BASE_URL}/${customerid}/edit-contact/${contactid}`, req);
+    return response.data;
+};
+export const editUserProfile = async (id,req) => {
+    const response = await instance.put(`${BASE_URL}/update-profile/${id}`,req);
+    return response.data;
+};
+export const getUser = async (id) => {
+    const response = await instance.get(`${BASE_URL}/user/${id}`);
+    return response.data;
+};
 
 
 // export const loginUser = async (email, password) => {
