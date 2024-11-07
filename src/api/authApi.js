@@ -30,8 +30,10 @@ export const getTopConversionRates = async () => {
     return response.data;
 };
 
-export const getAllSalesRepList = async () => {
-    const response = await instance.get(`${BASE_URL}/sales-rep-list`);
+export const getAllSalesRepList = async (page = 0, size = 5) => {
+    const response = await instance.get(`${BASE_URL}/sales-rep-list`, {
+        params: { page, size },
+    });
     return response.data;
 };
 

@@ -4,20 +4,34 @@ import { Link } from "react-router-dom";
 
 const TableOne = () => {
   const [salesRepInfo, setSalesRepInfo] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
-    const getSalesRepList = async () => {
+    const getSalesRepList = async (page) => {
       try {
-        const response = await getAllSalesRepList();
-
-        setSalesRepInfo(response);
+        const response = await getAllSalesRepList(page, 5); // Fetch 5 items per page
+        setSalesRepInfo(response.content);
+        setTotalPages(response.totalPages);
       } catch (error) {
         console.error("Error fetching all sales rep data:", error);
       }
     };
 
-    getSalesRepList();
-  }, []);
+    getSalesRepList(currentPage); // Fetch data for the current page
+  }, [currentPage]);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages - 1) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
 
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -64,10 +78,6 @@ const TableOne = () => {
             key={key}
           >
             <div className="flex items-center gap-3 p-2.5 xl:p-5">
-              <div className="flex-shrink-0">
-                {/* <img src={brand.logo} alt="Brand" /> */}
-                {/* {salesRep.id} */}
-              </div>
               <Link to={`/sales-reps/${salesRep.id}`}>
                 <p className=" text-black dark:text-white sm:block">
                   {salesRep.name}
@@ -101,6 +111,24 @@ const TableOne = () => {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="flex justify-center gap-4 mt-4">
+        <button
+          onClick={handlePreviousPage}
+          disabled={currentPage === 0}
+          className="px-4 py-2 bg-primary rounded text-white disabled:bg-boxdark-2 "
+        >
+          Previous
+        </button>
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages - 1}
+          className="px-4 py-2 bg-primary rounded text-white disabled:bg-boxdark-2 "
+        >
+          Next
+        </button>
       </div>
     </div>
   );
